@@ -18,16 +18,18 @@ public class CacheRepository {
 
     @Cacheable(
             value = CacheKeyCreator.ROOM_MEMBER,
-            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)"
+            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)",
+            unless = "#result == false"
     )
-    public boolean isValidUser(String roomId, String userId){
-        log.info("check");
+    public boolean isExistUser(String roomId, String userId){
+        log.info("# existUserCheck");
         return roomMemberRepository.findByRoomIdAndUserId(roomId, userId).isPresent();
     }
 
-    @CachePut(
+    @Cacheable(
             value = CacheKeyCreator.ROOM_MEMBER,
-            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)"
+            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)",
+            unless = "#result == null"
     )
     public boolean updateRoomMember(String roomId, String userId){
         log.info("## updateRoomMember readId:{}, userId:{}", roomId, userId);
@@ -36,13 +38,21 @@ public class CacheRepository {
         return roomMemberOptional.isPresent();
     }
 
-    @CachePut(
+    @Cacheable(
             value = CacheKeyCreator.ROOM_MEMBER,
-            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)"
+            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)",
+            unless = "#result == null"
     )
-    public void createRoomMember(String roomId, String userId){
+    public boolean createRoomMember(String roomId, String userId){
         log.info("## createRoomMember readId:{}, userId:{}", roomId, userId);
-        roomMemberRepository.save(new RoomMember(roomId, userId, 0L));
+        //여기에 sleap 예제를 넣으면 될듯
+        try{
+            RoomMember savedRoomMember = roomMemberRepository.save(new RoomMember(roomId, userId, 0L));
+            return true;
+        }catch(Exception e){
+            log.info(e.getMessage());
+            throw e;
+        }
     }
 
     @CacheEvict(
@@ -50,7 +60,6 @@ public class CacheRepository {
             key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)"
     )
     public void deleteRoomUser(String roomId, String userId){
-//        log.info((String) CacheKeyCreator.createKey(roomId, userId));
         log.info("## deleteRoomMember readId:{}, userId:{}", roomId, userId);
         RoomMember roomMember = roomMemberRepository.deleteRoomMemberByRoomIdAndUserId(roomId, userId);
         log.info("## deletedMemberId:{}", roomMember.userId);

@@ -1,10 +1,7 @@
 package spring.redis.talk;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,7 +11,7 @@ public class RoomController {
     void findRoomMember(@PathVariable String roomId, @RequestParam String userId){
         roomService.roomMemberFindCount(roomId, userId);
     }
-    @GetMapping("roomId/{roomId}/userId/{userId}")
+    @PostMapping("roomId/{roomId}/userId/{userId}")
     void createRoomMember(@PathVariable String roomId, @PathVariable String userId){
         roomService.createRoomMember(roomId, userId);
     }

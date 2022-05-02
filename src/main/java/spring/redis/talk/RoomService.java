@@ -13,7 +13,7 @@ public class RoomService {
 
     void roomMemberFindCount(String roomId, String userId) {
         for(int i=0;i<10;i++){
-            boolean validUser = cacheRepository.isValidUser(roomId, userId);
+            boolean validUser = cacheRepository.isExistUser(roomId, userId);
             if(validUser){
                 log.info("##validUser roomId={}, userId={}", roomId, userId);
                 cacheRepository.updateRoomMember(roomId, userId);
@@ -22,9 +22,14 @@ public class RoomService {
     }
 
     public void createRoomMember(String roomId, String userId) {
-        boolean validUser = cacheRepository.isValidUser(roomId, userId);
+        log.info("#createRoomMember");
+        boolean validUser = cacheRepository.isExistUser(roomId, userId);
         if(validUser){
             log.info("##exist RoomMember roomId={}, userId={}", roomId, userId);
+
+        }
+        else{
+            log.info("##not exist RoomMember roomId={}, userId={}", roomId, userId);
             cacheRepository.createRoomMember(roomId, userId);
         }
     }
