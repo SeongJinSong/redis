@@ -36,6 +36,15 @@ public class CacheRepository {
         return roomMemberOptional.isPresent();
     }
 
+    @CachePut(
+            value = CacheKeyCreator.ROOM_MEMBER,
+            key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)"
+    )
+    public void createRoomMember(String roomId, String userId){
+        log.info("## createRoomMember readId:{}, userId:{}", roomId, userId);
+        roomMemberRepository.save(new RoomMember(roomId, userId, 0L));
+    }
+
     @CacheEvict(
             value = CacheKeyCreator.ROOM_MEMBER,
             key = "T(spring.redis.util.CacheKeyCreator).createKey(#roomId, #userId)"

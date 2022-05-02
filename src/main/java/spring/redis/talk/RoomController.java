@@ -14,4 +14,8 @@ public class RoomController {
     void findRoomMember(@PathVariable String roomId, @RequestParam String userId){
         roomService.roomMemberFindCount(roomId, userId);
     }
+    @GetMapping("roomId/{roomId}/userId/{userId}")
+    void createRoomMember(@PathVariable String roomId, @PathVariable String userId){
+        roomService.createRoomMember(roomId, userId);
+    }
 }
