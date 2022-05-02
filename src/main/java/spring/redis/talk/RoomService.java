@@ -14,6 +14,7 @@ public class RoomService {
             boolean validUser = cacheRepository.isValidUser(roomId, userId);
             if(validUser){
                 log.info("##validUser roomId={}, userId={}", roomId, userId);
+                cacheRepository.updateRoomMember(roomId, userId);
             }
         }
     }
