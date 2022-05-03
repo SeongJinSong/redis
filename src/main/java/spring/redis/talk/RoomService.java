@@ -3,6 +3,7 @@ package spring.redis.talk;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import spring.redis.util.AccessLimit;
 
 @Slf4j
 @Service
@@ -21,6 +22,7 @@ public class RoomService {
         }
     }
 
+    @AccessLimit
     public void createRoomMember(String roomId, String userId) {
         log.info("#createRoomMember");
         boolean validUser = cacheRepository.isExistUser(roomId, userId);
