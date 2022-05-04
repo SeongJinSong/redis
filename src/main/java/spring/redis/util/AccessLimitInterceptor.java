@@ -14,13 +14,13 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component
 public class AccessLimitInterceptor implements HandlerInterceptor {
     @Resource
     private RedisTemplate<String, Integer> redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("AccessLimitInterceptor.preHandle");
         try{
             // Handler HandlerMethod
             if(handler instanceof HandlerMethod){

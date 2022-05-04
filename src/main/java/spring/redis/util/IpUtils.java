@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class IpUtils {
     public static String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
+        //proxy
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        if(ip==null)ip = request.getRemoteAddr();
+
         log.info("##getIpAddr ip:{}", ip);
         if(StringUtils.hasLength(ip) && !"unKnown".equalsIgnoreCase(ip)){
             //           ip ，   ip    ip
