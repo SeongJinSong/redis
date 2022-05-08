@@ -1,5 +1,9 @@
 package spring.redis.config;
 
+import lombok.RequiredArgsConstructor;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +13,10 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import spring.redis.stock.RedisProperty;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
     @Value("${spring.redis.host}")
     public String host;
@@ -18,6 +24,7 @@ public class RedisConfig {
     public int port;
     @Value("${spring.redis.password}")
     public String password;
+    private final RedisProperty redisProperty;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -41,5 +48,12 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
+    }
+    @Bean
+    public RedissonClient redissonClient(){
+        Config config = new Config();
+        config.useSingleServer()
+                .setAddress("redis://"+ this.redisProperty.getHost()+":"+ this.redisProperty.getPort());
+        return Redisson.create(config);
     }
 }
