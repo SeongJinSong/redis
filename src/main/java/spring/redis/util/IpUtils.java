@@ -13,6 +13,7 @@ public class IpUtils {
         if(ip==null)ip = request.getRemoteAddr();
 
         log.info("##getIpAddr ip:{}", ip);
+        if("0:0:0:0:0:0:0:1".equals(ip))return "localhost";
         if(StringUtils.hasLength(ip) && !"unKnown".equalsIgnoreCase(ip)){
             //           ip ，   ip    ip
             int index = ip.indexOf(",");

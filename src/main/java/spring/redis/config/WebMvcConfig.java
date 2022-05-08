@@ -15,7 +15,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/static/**","/login.html","/user/login");
         //API
         registry.addInterceptor(accessLimitInterceptor()).addPathPatterns("/**").excludePathPatterns("/static/**","/login.html");
     }
