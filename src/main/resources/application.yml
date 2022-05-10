@@ -25,8 +25,8 @@ spring:
   cache:
     type:
   redis:
-    host: 192.168.151.42
-    port: 6379
+    host: ${REDIS_URL:192.168.151.42}
+    port: ${REDIS_PORT:6379}
     password:
     stock:
       prefix: stocks
