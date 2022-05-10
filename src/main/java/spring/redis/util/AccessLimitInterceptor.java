@@ -21,7 +21,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        System.out.println("AccessLimitInterceptor.preHandle");
+        log.info("AccessLimitInterceptor.preHandle");
         try{
             // Handler HandlerMethod
             if(handler instanceof HandlerMethod){
