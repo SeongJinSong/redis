@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class StockService {
     private final RedissonClient redissonClient;
     private final StockProperty stockProperty;
+    private final ServerProperties serverProperties;
     private static final int EMPTY = 0;
 
 
@@ -33,14 +35,14 @@ public class StockService {
     public void decreaseNoLock(final  String key, final int count){
         final String worker = Thread.currentThread().getName();
         final int stock = currentStock(key);
-        log.info("[{}] 현재 남은 재고 : {}", worker, currentStock(key));
+        log.info("[{}][{}] 현재 남은 재고 : {}",serverProperties.getPort(), worker, currentStock(key));
 
         if (stock <= EMPTY) {
-            log.info("[{}] 현재 남은 재고가 없습니다. ({} 개)", worker, stock);
+            log.info("[{}][{}] 현재 남은 재고가 없습니다. ({} 개)", serverProperties.getPort(), worker, stock);
             return;
         }
 
-        log.info("현재 진행중인 사람 : {} & 현재 남은 재고 : {}개", worker, stock);
+        log.info("[{}] 현재 진행중인 사람 : {} & 현재 남은 재고 : {}개", serverProperties.getPort(), worker, stock);
         setStock(key, stock - count);
     }
 
@@ -56,11 +58,11 @@ public class StockService {
 
             final int stock = currentStock(key);
             if (stock <= EMPTY) {
-                log.info("[{}] 현재 남은 재고가 없습니다. ({}개)", worker, stock);
+                log.info("[{}][{}] 현재 남은 재고가 없습니다. ({}개)", serverProperties.getPort(), worker, stock);
                 return;
             }
 
-            log.info("현재 진행중인 사람 : {} & 현재 남은 재고 : {} 개", worker, stock);
+            log.info("[{}] 현재 진행중인 사람 : {} & 현재 남은 재고 : {} 개",serverProperties.getPort(), worker, stock);
             setStock(key, stock - count);
         } catch (InterruptedException e) {
             e.printStackTrace();
