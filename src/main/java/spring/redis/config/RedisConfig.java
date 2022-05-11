@@ -1,8 +1,10 @@
 package spring.redis.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +54,8 @@ public class RedisConfig {
     @Bean
     public RedissonClient redissonClient(){
         Config config = new Config();
-        config.useSingleServer()
+        config.setCodec(StringCodec.INSTANCE) //value 인코딩 설정 정상화
+                .useSingleServer()
                 .setAddress("redis://"+ this.redisProperty.getHost()+":"+ this.redisProperty.getPort());
         return Redisson.create(config);
     }

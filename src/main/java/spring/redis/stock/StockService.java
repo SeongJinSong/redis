@@ -2,7 +2,6 @@ package spring.redis.stock;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.jandex.EmptyTypeTarget;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class StockService {
 
 
     public int currentStock(String key){
-        return (int)redissonClient.getBucket(key).get();
+        return Integer.parseInt((String)redissonClient.getBucket(key).get());
     }
 
     public void setStock(String key, int amount){

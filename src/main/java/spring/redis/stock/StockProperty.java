@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties("redis.stock")
+@ConfigurationProperties("spring.redis.stock")
 public class StockProperty {
     private String prefix;
 }
