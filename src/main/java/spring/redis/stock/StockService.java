@@ -72,4 +72,32 @@ public class StockService {
             }
         }
     }
+
+    public void decreaseSleep(final String key, final int count){
+        final String lockName = key + ":lock";
+        final RLock lock = redissonClient.getLock(lockName);
+        final String worker = Thread.currentThread().getName();
+
+        try{
+            if (!lock.tryLock(100, 300, TimeUnit.SECONDS)) {
+                return;
+            }
+
+            final int stock = currentStock(key);
+            if (stock <= EMPTY) {
+                log.info("[{}][{}] 현재 남은 재고가 없습니다. ({}개)", serverProperties.getPort(), worker, stock);
+                return;
+            }
+
+            log.info("[{}] 현재 진행중인 사람 : {} & 현재 남은 재고 : {} 개",serverProperties.getPort(), worker, stock);
+            setStock(key, stock - count);
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            if (lock != null && lock.isLocked()) {
+                lock.unlock();
+            }
+        }
+    }
 }

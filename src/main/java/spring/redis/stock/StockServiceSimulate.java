@@ -32,6 +32,23 @@ public class StockServiceSimulate {
         log.info("currentCount = {}", currentCount);
     }
 
+    public void simulateLockSleep(Long itemId) throws InterruptedException {
+        final int people = 100;
+        final int count = 2;
+        String stockKey = stockService.keyResolver("item"+itemId, String.valueOf(itemId));
+        final CountDownLatch countDownLatch = new CountDownLatch(people);
+
+        List<Thread> workers = Stream
+                .generate(() -> new Thread(new BuyWorkerSleep(stockKey, count, countDownLatch)))
+                .limit(people)
+                .collect(Collectors.toList());
+        workers.forEach(Thread::start);
+        countDownLatch.await();
+
+        final int currentCount = stockService.currentStock(stockService.keyResolver("item"+itemId, String.valueOf(itemId)));
+        log.info("currentCount = {}", currentCount);
+    }
+
     public void simulateNoLock(Long itemId) throws InterruptedException {
 
         final int people = 100;
@@ -72,6 +89,24 @@ public class StockServiceSimulate {
         @Override
         public void run(){
             stockService.decrease(this.stockKey, count);
+            countDownLatch.countDown();
+        }
+    }
+
+    private class BuyWorkerSleep implements Runnable{
+        private String stockKey;
+        private int count;
+        private CountDownLatch countDownLatch;
+
+        public BuyWorkerSleep(String stockKey, int count, CountDownLatch countDownLatch) {
+            this.stockKey = stockKey;
+            this.count = count;
+            this.countDownLatch = countDownLatch;
+        }
+
+        @Override
+        public void run(){
+            stockService.decreaseSleep(this.stockKey, count);
             countDownLatch.countDown();
         }
     }

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spring.redis.util.AccessLimit;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +22,10 @@ public class StockController {
     @PutMapping("item/{itemId}/lock")
     void buyItem(@PathVariable Long itemId) throws InterruptedException {
         stockServiceSimulate.simulateLock(itemId);
+    }
+
+    @PutMapping("item/{itemId}/lock-sleep")
+    void buyItemSleep(@PathVariable Long itemId) throws InterruptedException {
+        stockServiceSimulate.simulateLockSleep(itemId);
     }
 }
