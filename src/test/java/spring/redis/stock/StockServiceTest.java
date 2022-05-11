@@ -25,8 +25,8 @@ class StockServiceTest {
 
     @BeforeEach
     void stock_key_setting(){
-        final String name = "peanut";
-        final String keyId = "001";
+        final String name = "item1";
+        final String keyId = "1";
         final int amount = 100;
         final Stock item = new Stock(name, keyId, amount);
 

@@ -13,4 +13,9 @@ public class Stock {
         this.keyId = keyId;
         this.amount = amount;
     }
+
+    public Stock(String name, String keyId) {
+        this.name = name;
+        this.keyId = keyId;
+    }
 }
