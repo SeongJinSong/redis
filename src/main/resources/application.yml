@@ -30,3 +30,7 @@ spring:
     password:
     stock:
       prefix: stocks
+
+logging:
+  level:
+    root: INFO

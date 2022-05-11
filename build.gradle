@@ -36,6 +36,12 @@ dependencies {
 	implementation 'net.sf.json-lib:json-lib:2.4:jdk15'
 	//Configuring the Annotation Processor
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	//logback
+	implementation (
+			'ch.qos.logback:logback-classic:1.2.11',
+			'ch.qos.logback:logback-core:1.2.11',
+	)
 }
 
 
